@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="node_modules/jquery/dist/jquery.min.js"></script>
+</head>
+
+<body>
+    <button id="Button">换一换</button>
+    <ul id="box">
+    </ul>
+
+</body>
+<script>
+    // 封装 AJAX 请求为 Promise  
+    const $button = $('#Button')
+    const $box = $('#box')
+
+    let content = ""
+
+    function fetchList() {
+        return new Promise((resolve, reject) => {
+            $.ajax({
+                url: "http://127.0.0.1:3000/",
+                type: 'GET',
+                // dataType: 'json',
+                success: function (data) {
+                    // 修改promise状态 并输入值
+                    resolve(data);
+                },
+                error: function (res) {
+                    reject(res);
+                }
+            });
+        });
+    }
+
+    $button.on('click', () => {
+        fetchList().then((data) => {
+            $.each(data, (index, item) => {
+                content += `<li>${item.title}</li>`
+            });
+            $box.html(content)
+        }).catch((res) => {
+        });
+    });  
+</script>
+
+</html>
